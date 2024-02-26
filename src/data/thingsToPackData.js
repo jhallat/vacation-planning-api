@@ -13,19 +13,20 @@ exports.insert = async ({description, amountType, dayAmount, extraAmount, freque
         `,
         [id, description, amountType, convertedDayAmount, extraAmount, frequencyType]
     );
-    for (let condition of conditions) {
-        await pool.query(
-            'INSERT INTO thing_to_pack_condition_mapping VALUES ($1, $2)',
-            [id, condition.id]
-        )
-    }
+    let useConditions = conditions || []
+        for (let condition of useConditions) {
+            await pool.query(
+                'INSERT INTO thing_to_pack_condition_mapping VALUES ($1, $2)',
+                [id, condition.id]
+            )
+        }
     return {
         id,
         description,
         dayAmount,
         extraAmount,
         frequencyType,
-        conditions
+        conditions: useConditions
     }
 }
 
